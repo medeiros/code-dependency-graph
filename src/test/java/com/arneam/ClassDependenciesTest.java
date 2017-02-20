@@ -18,12 +18,15 @@ import static org.junit.Assert.assertThat;
 
 public class ClassDependenciesTest {
 
+    //static final String FILE_PATH = "/home/daniel/code/opensource/code-dependency-graph/src/main/java/";
+    static final String FILE_PATH = "/Users/dma/code/opensource/code-dependency-graph/src/main/java";
+
     File projectDir;
     ClassDependencies classDependencies;
 
     @Before
     public void setup() {
-        projectDir = new File("/home/daniel/code/sandbox/code-dependency-graph/src/main/java/");
+        projectDir = new File(FILE_PATH);
         classDependencies = new ClassDependencies(projectDir);
     }
 
@@ -180,10 +183,25 @@ public class ClassDependenciesTest {
         classDependencies.writeEdgesIntoCSVFile(classDependencies.allWith(".*(File)").edges(),
                 ";", System.lineSeparator(), "./edges.csv");
 
-        List<String> nodesFromCSVFile = Files.readAllLines(Paths.get("./edges.csv"));
-        assertThat(nodesFromCSVFile, containsInAnyOrder(
+        List<String> edgesFromCSVFile = Files.readAllLines(Paths.get("./edges.csv"));
+        assertThat(edgesFromCSVFile, containsInAnyOrder(
             is("com.arneam.ClassDependencies;java.io.File"),
             is("com.arneam.DirExplorer;java.io.File")));
+    }
+
+    @Test
+    public void shouldGenerateXMLFromCSVFiles() throws IOException {
+        classDependencies.writeNodesIntoCSVFile(classDependencies.all().nodes(),
+                System.lineSeparator(), "./nodes.csv");
+
+        //classDependencies.writeEdgesIntoCSVFile(classDependencies.allWith(".*(File)").edges(),
+        classDependencies.writeEdgesIntoCSVFile(classDependencies.all().edges(),
+                ";", System.lineSeparator(), "./edges.csv");
+
+        classDependencies.generateXMLFromCSVFiles("./nodes.csv", "./edges.csv", "./classDependencies.graphml");
+
+        List<String> xmlFile = Files.readAllLines(Paths.get("./classDependencies.graphml"));
+        assertThat(xmlFile.size(), greaterThan(0));
     }
 
     // todo: generate in graphml format, para gephi

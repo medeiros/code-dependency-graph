@@ -4,6 +4,8 @@ import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.PackageDeclaration;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
+import com.mycila.xmltool.XMLDoc;
+import com.mycila.xmltool.XMLTag;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -13,10 +15,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class ClassDependencies {
 
@@ -139,4 +138,53 @@ public class ClassDependencies {
         }
     }
 
+    public void generateXMLFromCSVFiles(String nodesCSVFile, String edgesCSVFile, String xmlFile) {
+        // according to https://en.wikipedia.org/wiki/GraphML and
+        // https://gephi.org/users/supported-graph-formats/graphml-format/
+
+        List<String> nodes;
+        List<String> edges;
+
+        try {
+            nodes = Files.readAllLines(Paths.get(nodesCSVFile));
+            edges = Files.readAllLines(Paths.get(edgesCSVFile));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        Charset charset = Charset.forName("UTF-8");
+
+        XMLTag doc = XMLDoc.from(Paths.get("./template.graphml").toFile())
+            .addTag("key")
+                .addAttribute("id", "d1")
+                .addAttribute("for", "edge")
+                .addAttribute("attr.name", "weight")
+                .addAttribute("attr.type", "double")
+                .gotoParent()
+            .addTag("graph")
+                .addAttribute("id", "G")
+                .addAttribute("edgedefault", "undirected");
+
+        nodes.forEach(node -> doc.addTag("node").addAttribute("id", node).gotoParent());
+        edges.forEach(edge -> {
+            doc.addTag("edge")
+                .addAttribute("id", "e" + new Random().nextInt(100))
+                .addAttribute("source", edge.split(";")[0])
+                .addAttribute("target", edge.split(";")[1])
+                .addTag("data")
+                    .addAttribute("key", "d1")
+                    .addText("1.0")
+                .gotoParent();
+        });
+
+        String s = doc.toString();
+
+        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(xmlFile), charset)) {
+            writer.write(s, 0, s.length());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
 }
