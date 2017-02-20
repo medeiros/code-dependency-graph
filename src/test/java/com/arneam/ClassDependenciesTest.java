@@ -19,9 +19,11 @@ import static org.junit.Assert.assertThat;
 
 public class ClassDependenciesTest {
 
-    //static final String FILE_PATH = "/home/daniel/code/opensource/code-dependency-graph/src/main/java/";
     static final String FILE_PATH = "/Users/dma/code/opensource/code-dependency-graph/src/main/java";
 
+    private static final String NODES_CSV_FILE = "./nodes.csv";
+    private static final String EDGES_CSV_FILE = "./edges.csv";
+    private static final String GRAPHML_FILE = "./classDependencies.graphml";
     File projectDir;
     ClassDependencies classDependencies;
 
@@ -52,49 +54,47 @@ public class ClassDependenciesTest {
     }
 
     @Test
-    public void shouldLoadAllDependenciesForClassDependenciesClass() {
+    public void shouldLoadAllClassDependenciesOfClassDependenciesClass() {
         Map<String, Set<String>> dependencies = classDependencies.all().data();
         assertThat(dependencies, hasEntry(is("com.arneam.ClassDependencies"), containsInAnyOrder(
-                "com.github.javaparser.JavaParser",
-                "com.github.javaparser.ast.ImportDeclaration",
-                "com.github.javaparser.ast.PackageDeclaration",
-                "com.github.javaparser.ast.visitor.VoidVisitorAdapter",
-                "com.mycila.xmltool.XMLDoc",
-                "com.mycila.xmltool.XMLTag",
-                "org.apache.commons.lang3.tuple.ImmutablePair",
-                "org.apache.commons.lang3.tuple.Pair",
-                "java.io.BufferedWriter",
-                "java.io.File",
-                "java.io.IOException",
-                "java.nio.charset.Charset",
-                "java.nio.file.Files",
-                "java.nio.file.Paths",
-                "java.util.Set",
-                "java.util.HashSet",
-                "java.util.List",
-                "java.util.Map",
-                "java.util.HashMap",
-                "java.util.Random"
-        )));
+            "com.github.javaparser.JavaParser",
+            "com.github.javaparser.ast.ImportDeclaration",
+            "com.github.javaparser.ast.PackageDeclaration",
+            "com.github.javaparser.ast.visitor.VoidVisitorAdapter",
+            "com.mycila.xmltool.XMLDoc",
+            "com.mycila.xmltool.XMLTag",
+            "org.apache.commons.lang3.tuple.ImmutablePair",
+            "org.apache.commons.lang3.tuple.Pair",
+            "java.io.BufferedWriter",
+            "java.io.File",
+            "java.io.IOException",
+            "java.nio.charset.Charset",
+            "java.nio.file.Files",
+            "java.nio.file.Paths",
+            "java.util.Set",
+            "java.util.HashSet",
+            "java.util.List",
+            "java.util.Map",
+            "java.util.HashMap",
+            "java.util.Random")));
     }
 
     @Test
-    public void shouldLoadAllDependenciesForClassDependenciesWhichEndsWIthMap() {
+    public void shouldLoadAllClassDependenciesOfClassDependenciesWhichEndsWithMap() {
         Map<String, Set<String>> dependencies = classDependencies.allWith(".*(Map)").data();
         assertThat(dependencies, hasEntry(is("com.arneam.ClassDependencies"), containsInAnyOrder(
-                "java.util.HashMap",
-                "java.util.Map"
-        )));
+            "java.util.HashMap",
+            "java.util.Map")));
     }
 
     @Test
-    public void shouldLoadAllDependenciesForDirExplorerClass() {
+    public void shouldLoadAllClassDependenciesOfDirExplorerClass() {
         Map<String, Set<String>> dependencies = classDependencies.all().data();
         assertThat(dependencies, hasEntry(is("com.arneam.DirExplorer"), contains("java.io.File")));
     }
 
     @Test
-    public void shouldGenerateNodesFromAllDependencies() { // also called vertex (plural: vertices)
+    public void shouldGenerateNodesOfAllDependencies() { // also called vertex (plural: vertices)
         Set<String> nodes = classDependencies.all().nodes();
         assertThat(nodes, containsInAnyOrder(
             "com.github.javaparser.JavaParser",
@@ -122,7 +122,7 @@ public class ClassDependenciesTest {
     }
 
     @Test
-    public void shouldGenerateNodesFromFilteredDependencies() { // also called vertex (plural: vertices)
+    public void shouldGenerateNodesOfFilteredDependencies() { // also called vertex (plural: vertices)
         Set<String> nodes = classDependencies.allWith(".*(File)").nodes();
         assertThat(nodes, containsInAnyOrder(
             "com.arneam.ClassDependencies",
@@ -131,7 +131,7 @@ public class ClassDependenciesTest {
     }
 
     @Test
-    public void shouldGenerateEdgesFromAllDependencies() { // edge = pair of vertices or nodes
+    public void shouldGenerateEdgesOfAllDependencies() { // edge = pair of vertices or nodes
         Set<Pair<String, String>> edges = classDependencies.all().edges();
 
         assertThat(edges, containsInAnyOrder(
@@ -182,7 +182,7 @@ public class ClassDependenciesTest {
     }
 
     @Test
-    public void shouldGenerateEdgesFromFilteredDependencies() {
+    public void shouldGenerateEdgesOfFilteredDependencies() {
         Set<Pair<String, String>> edges = classDependencies.allWith(".*(File)").edges();
         assertThat(edges, containsInAnyOrder(
             allOf(hasProperty("key", is("com.arneam.ClassDependencies")),
@@ -192,7 +192,7 @@ public class ClassDependenciesTest {
     }
 
     @Test
-    public void shouldGenerateCSVDataFromNodes() {
+    public void shouldGenerateCSVDataOfNodesOfClassDependenciesClass() {
         String csv = classDependencies.toCSVFormat(classDependencies.all().nodes(), System.lineSeparator());
 
         assertThat(Arrays.asList(csv.split(System.lineSeparator())), containsInAnyOrder(
@@ -221,52 +221,44 @@ public class ClassDependenciesTest {
     }
 
     @Test
-    public void shouldGenerateCSVDataFromEdges() {
-        assertThat(classDependencies.toCSVFormat(classDependencies.allWith(".*(File)").edges(),
-            ";",
-            System.lineSeparator()),
-            anyOf(
+    public void shouldGenerateCSVDataOfEdges() {
+        assertThat(classDependencies.toCSVFormat(classDependencies.allWith(".*(File)").edges(), ";",
+            System.lineSeparator()), anyOf(
                 is("com.arneam.ClassDependencies;java.io.File\ncom.arneam.DirExplorer;java.io.File\n"),
                 is("com.arneam.DirExplorer;java.io.File\ncom.arneam.ClassDependencies;java.io.File\n")));
     }
 
     @Test
-    public void shouldWriteNodeIntoCSVFile() throws IOException {
+    public void shouldWriteNodesIntoCSVFile() throws IOException {
         classDependencies.writeNodesIntoCSVFile(classDependencies.all().nodes(),
-                System.lineSeparator(), "./nodes.csv");
+                System.lineSeparator(), NODES_CSV_FILE);
 
-        List<String> nodesFromCSVFile = Files.readAllLines(Paths.get("./nodes.csv"));
+        List<String> nodesFromCSVFile = Files.readAllLines(Paths.get(NODES_CSV_FILE));
         assertThat(nodesFromCSVFile.size(), equalTo(22));
     }
 
     @Test
     public void shouldWriteEdgesIntoCSVFile() throws IOException {
         classDependencies.writeEdgesIntoCSVFile(classDependencies.all().edges(),
-                ";", System.lineSeparator(), "./edges.csv");
+                ";", System.lineSeparator(), EDGES_CSV_FILE);
 
-        List<String> edgesFromCSVFile = Files.readAllLines(Paths.get("./edges.csv"));
+        List<String> edgesFromCSVFile = Files.readAllLines(Paths.get(EDGES_CSV_FILE));
         assertThat(edgesFromCSVFile.size(), equalTo(21));
     }
 
     @Test
-    public void shouldGenerateXMLFromCSVFiles() throws IOException {
+    public void shouldGenerateGraphMLFromCSVFiles() throws IOException {
         classDependencies.writeNodesIntoCSVFile(classDependencies.all().nodes(),
-                System.lineSeparator(), "./nodes.csv");
+                System.lineSeparator(), NODES_CSV_FILE);
 
-        //classDependencies.writeEdgesIntoCSVFile(classDependencies.allWith(".*(File)").edges(),
         classDependencies.writeEdgesIntoCSVFile(classDependencies.all().edges(),
-                ";", System.lineSeparator(), "./edges.csv");
+                ";", System.lineSeparator(), EDGES_CSV_FILE);
 
-        classDependencies.generateXMLFromCSVFiles("./nodes.csv", "./edges.csv", "./classDependencies.graphml");
+        classDependencies.generateGraphMLFromCSVFiles(NODES_CSV_FILE, EDGES_CSV_FILE,
+                GRAPHML_FILE);
 
-        List<String> xmlFile = Files.readAllLines(Paths.get("./classDependencies.graphml"));
+        List<String> xmlFile = Files.readAllLines(Paths.get(GRAPHML_FILE));
         assertThat(xmlFile.size(), greaterThan(0));
     }
-
-    // todo: generate in graphml format, para gephi
-    // https://en.wikipedia.org/wiki/GraphML
-    // https://gephi.org/users/supported-graph-formats/graphml-format/
-    // gephi api to export to a graph file/pdf/svg https://gephi.org/tutorials/gephi-tutorial-toolkit.pdf
-    // java xml parsing: https://github.com/mycila/xmltool; https://github.com/dom4j/dom4j; 
 
 }

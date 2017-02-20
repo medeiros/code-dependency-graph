@@ -153,7 +153,7 @@ public class ClassDependencies {
         }
     }
 
-    public void generateXMLFromCSVFiles(String nodesCSVFile, String edgesCSVFile, String xmlFile) {
+    public void generateGraphMLFromCSVFiles(String nodesCSVFile, String edgesCSVFile, String xmlFile) {
         // according to https://en.wikipedia.org/wiki/GraphML and
         // https://gephi.org/users/supported-graph-formats/graphml-format/
 

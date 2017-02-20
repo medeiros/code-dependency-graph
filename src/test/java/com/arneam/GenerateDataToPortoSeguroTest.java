@@ -19,7 +19,7 @@ public class GenerateDataToPortoSeguroTest {
         classDependencies.writeEdgesIntoCSVFile(classDependencies.allWith(".*(Dao)").edges(),
                 ";", System.lineSeparator(), "./portoprint-edges.csv");
 
-        classDependencies.generateXMLFromCSVFiles("./portoprint-nodes.csv",
+        classDependencies.generateGraphMLFromCSVFiles("./portoprint-nodes.csv",
                 "./portoprint-edges.csv", "./portoprint-classDependencies.graphml");
     }
 
