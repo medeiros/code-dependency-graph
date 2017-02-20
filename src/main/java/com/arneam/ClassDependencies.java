@@ -6,6 +6,7 @@ import com.github.javaparser.ast.PackageDeclaration;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import com.mycila.xmltool.XMLDoc;
 import com.mycila.xmltool.XMLTag;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -15,7 +16,12 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Random;
 
 public class ClassDependencies {
 
@@ -46,7 +52,16 @@ public class ClassDependencies {
     }
 
     public Set<String> nodes() {
-        return dependencies.keySet();
+        Set<String> nodes = new HashSet<>();
+
+        dependencies.forEach((k, v) -> {
+            nodes.add(k);
+            v.forEach(item -> {
+                nodes.add(item);
+            });
+        });
+
+        return nodes;
     }
 
     public Set<Pair<String, String>> edges() {
@@ -165,17 +180,54 @@ public class ClassDependencies {
                 .addAttribute("id", "G")
                 .addAttribute("edgedefault", "undirected");
 
-        nodes.forEach(node -> doc.addTag("node").addAttribute("id", node).gotoParent());
-        edges.forEach(edge -> {
-            doc.addTag("edge")
-                .addAttribute("id", "e" + new Random().nextInt(100))
-                .addAttribute("source", edge.split(";")[0])
-                .addAttribute("target", edge.split(";")[1])
-                .addTag("data")
-                    .addAttribute("key", "d1")
-                    .addText("1.0")
-                .gotoParent();
+        nodes.forEach(node -> {
+            int nodeSize = node.split("\\.").length;
+            String simplifiedNode = node;
+
+            // todo: add unit test (scenario not covered)
+            if (StringUtils.countMatches(simplifiedNode, ".") >= 2) {
+                simplifiedNode = node.split("\\.")[nodeSize - 2] + "." + node.split("\\.")[nodeSize - 1];
+            }
+
+            doc.addTag("node").addAttribute("id", simplifiedNode).gotoParent();
         });
+
+        for (int i = 0; i < edges.size(); i++) {
+            String edgeSource = edges.get(i).split(";")[0];
+            String edgeTarget = edges.get(i).split(";")[1];
+
+            int edgeSourceSize = edgeSource.split("\\.").length;
+            int edgeTargetSize = edgeTarget.split("\\.").length;
+
+            // todo: add unit test (scenario not covered)
+            if (StringUtils.countMatches(edgeSource, ".") >= 2) {
+                edgeSource = edgeSource.split("\\.")[edgeSourceSize - 2] + "." + edgeSource.split("\\.")[edgeSourceSize - 1];
+            }
+            // todo: add unit test (scenario not covered)
+            if (StringUtils.countMatches(edgeTarget, ".") >= 2) {
+                edgeTarget = edgeTarget.split("\\.")[edgeTargetSize - 2] + "." + edgeTarget.split("\\.")[edgeTargetSize - 1];
+            }
+
+            doc.addTag("edge")
+                .addAttribute("id", "e" + i)
+                .addAttribute("source", edgeSource)
+                .addAttribute("target", edgeTarget)
+                .addTag("data")
+                .addAttribute("key", "d1")
+                .addText("1.0")
+                .gotoParent();
+        }
+
+//        edges.forEach(edge -> {
+//            doc.addTag("edge")
+//                .addAttribute("id", "e" + new Random().nextInt(100))
+//                .addAttribute("source", edge.split(";")[0])
+//                .addAttribute("target", edge.split(";")[1])
+//                .addTag("data")
+//                    .addAttribute("key", "d1")
+//                    .addText("1.0")
+//                .gotoParent();
+//        });
 
         String s = doc.toString();
 

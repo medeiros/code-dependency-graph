@@ -3,4 +3,5 @@ target/*
 *.csv
 *.iml
 classDependencies.graphml
-
+porto*
+*.gephi

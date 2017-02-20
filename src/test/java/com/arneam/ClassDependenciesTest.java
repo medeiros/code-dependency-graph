@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -54,22 +55,26 @@ public class ClassDependenciesTest {
     public void shouldLoadAllDependenciesForClassDependenciesClass() {
         Map<String, Set<String>> dependencies = classDependencies.all().data();
         assertThat(dependencies, hasEntry(is("com.arneam.ClassDependencies"), containsInAnyOrder(
-            "com.github.javaparser.JavaParser",
-            "com.github.javaparser.ast.ImportDeclaration",
-            "com.github.javaparser.ast.PackageDeclaration",
-            "com.github.javaparser.ast.visitor.VoidVisitorAdapter",
-            "org.apache.commons.lang3.tuple.ImmutablePair",
-            "org.apache.commons.lang3.tuple.Pair",
-            "java.io.BufferedWriter",
-            "java.io.File",
-            "java.io.IOException",
-            "java.nio.charset.Charset",
-            "java.nio.file.Files",
-            "java.nio.file.Paths",
-            "java.util.HashMap",
-            "java.util.HashSet",
-            "java.util.Map",
-            "java.util.Set"
+                "com.github.javaparser.JavaParser",
+                "com.github.javaparser.ast.ImportDeclaration",
+                "com.github.javaparser.ast.PackageDeclaration",
+                "com.github.javaparser.ast.visitor.VoidVisitorAdapter",
+                "com.mycila.xmltool.XMLDoc",
+                "com.mycila.xmltool.XMLTag",
+                "org.apache.commons.lang3.tuple.ImmutablePair",
+                "org.apache.commons.lang3.tuple.Pair",
+                "java.io.BufferedWriter",
+                "java.io.File",
+                "java.io.IOException",
+                "java.nio.charset.Charset",
+                "java.nio.file.Files",
+                "java.nio.file.Paths",
+                "java.util.Set",
+                "java.util.HashSet",
+                "java.util.List",
+                "java.util.Map",
+                "java.util.HashMap",
+                "java.util.Random"
         )));
     }
 
@@ -91,18 +96,44 @@ public class ClassDependenciesTest {
     @Test
     public void shouldGenerateNodesFromAllDependencies() { // also called vertex (plural: vertices)
         Set<String> nodes = classDependencies.all().nodes();
-        assertThat(nodes, containsInAnyOrder("com.arneam.ClassDependencies", "com.arneam.DirExplorer"));
+        assertThat(nodes, containsInAnyOrder(
+            "com.github.javaparser.JavaParser",
+            "com.github.javaparser.ast.ImportDeclaration",
+            "com.github.javaparser.ast.PackageDeclaration",
+            "com.github.javaparser.ast.visitor.VoidVisitorAdapter",
+            "com.mycila.xmltool.XMLDoc",
+            "com.mycila.xmltool.XMLTag",
+            "org.apache.commons.lang3.tuple.ImmutablePair",
+            "org.apache.commons.lang3.tuple.Pair",
+            "java.io.BufferedWriter",
+            "java.io.File",
+            "java.io.IOException",
+            "java.nio.charset.Charset",
+            "java.nio.file.Files",
+            "java.nio.file.Paths",
+            "java.util.Set",
+            "java.util.HashSet",
+            "java.util.List",
+            "java.util.Map",
+            "java.util.HashMap",
+            "java.util.Random",
+            "com.arneam.ClassDependencies",
+            "com.arneam.DirExplorer"));
     }
 
     @Test
     public void shouldGenerateNodesFromFilteredDependencies() { // also called vertex (plural: vertices)
-        Set<String> nodes = classDependencies.allWith(".*(Declaration)").nodes();
-        assertThat(nodes, contains("com.arneam.ClassDependencies"));
+        Set<String> nodes = classDependencies.allWith(".*(File)").nodes();
+        assertThat(nodes, containsInAnyOrder(
+            "com.arneam.ClassDependencies",
+            "com.arneam.DirExplorer",
+            "java.io.File"));
     }
 
     @Test
     public void shouldGenerateEdgesFromAllDependencies() { // edge = pair of vertices or nodes
         Set<Pair<String, String>> edges = classDependencies.all().edges();
+
         assertThat(edges, containsInAnyOrder(
             allOf(hasProperty("key", is("com.arneam.ClassDependencies")),
                 hasProperty("value", is("com.github.javaparser.JavaParser"))),
@@ -113,15 +144,9 @@ public class ClassDependenciesTest {
             allOf(hasProperty("key", is("com.arneam.ClassDependencies")),
                     hasProperty("value", is("com.github.javaparser.ast.visitor.VoidVisitorAdapter"))),
             allOf(hasProperty("key", is("com.arneam.ClassDependencies")),
-                    hasProperty("value", is("java.io.IOException"))),
+                    hasProperty("value", is("com.mycila.xmltool.XMLDoc"))),
             allOf(hasProperty("key", is("com.arneam.ClassDependencies")),
-                    hasProperty("value", is("java.util.HashMap"))),
-            allOf(hasProperty("key", is("com.arneam.ClassDependencies")),
-                    hasProperty("value", is("java.util.Map"))),
-            allOf(hasProperty("key", is("com.arneam.ClassDependencies")),
-                    hasProperty("value", is("java.util.Set"))),
-            allOf(hasProperty("key", is("com.arneam.ClassDependencies")),
-                    hasProperty("value", is("java.util.HashSet"))),
+                    hasProperty("value", is("com.mycila.xmltool.XMLTag"))),
             allOf(hasProperty("key", is("com.arneam.ClassDependencies")),
                     hasProperty("value", is("org.apache.commons.lang3.tuple.ImmutablePair"))),
             allOf(hasProperty("key", is("com.arneam.ClassDependencies")),
@@ -129,11 +154,25 @@ public class ClassDependenciesTest {
             allOf(hasProperty("key", is("com.arneam.ClassDependencies")),
                     hasProperty("value", is("java.io.BufferedWriter"))),
             allOf(hasProperty("key", is("com.arneam.ClassDependencies")),
+                    hasProperty("value", is("java.io.IOException"))),
+            allOf(hasProperty("key", is("com.arneam.ClassDependencies")),
                     hasProperty("value", is("java.nio.charset.Charset"))),
             allOf(hasProperty("key", is("com.arneam.ClassDependencies")),
                     hasProperty("value", is("java.nio.file.Files"))),
             allOf(hasProperty("key", is("com.arneam.ClassDependencies")),
                     hasProperty("value", is("java.nio.file.Paths"))),
+            allOf(hasProperty("key", is("com.arneam.ClassDependencies")),
+                    hasProperty("value", is("java.util.Set"))),
+            allOf(hasProperty("key", is("com.arneam.ClassDependencies")),
+                    hasProperty("value", is("java.util.HashSet"))),
+            allOf(hasProperty("key", is("com.arneam.ClassDependencies")),
+                    hasProperty("value", is("java.util.Map"))),
+            allOf(hasProperty("key", is("com.arneam.ClassDependencies")),
+                    hasProperty("value", is("java.util.HashMap"))),
+            allOf(hasProperty("key", is("com.arneam.ClassDependencies")),
+                    hasProperty("value", is("java.util.List"))),
+            allOf(hasProperty("key", is("com.arneam.ClassDependencies")),
+                    hasProperty("value", is("java.util.Random"))),
             allOf(hasProperty("key", is("com.arneam.ClassDependencies")),
                 hasProperty("value", is("java.io.File"))),
             allOf(hasProperty("key", is("com.arneam.DirExplorer")),
@@ -154,8 +193,31 @@ public class ClassDependenciesTest {
 
     @Test
     public void shouldGenerateCSVDataFromNodes() {
-        assertThat(classDependencies.toCSVFormat(classDependencies.all().nodes(), System.lineSeparator()),
-            is("com.arneam.ClassDependencies\ncom.arneam.DirExplorer\n"));
+        String csv = classDependencies.toCSVFormat(classDependencies.all().nodes(), System.lineSeparator());
+
+        assertThat(Arrays.asList(csv.split(System.lineSeparator())), containsInAnyOrder(
+            "com.github.javaparser.JavaParser",
+            "com.github.javaparser.ast.ImportDeclaration",
+            "com.github.javaparser.ast.PackageDeclaration",
+            "com.github.javaparser.ast.visitor.VoidVisitorAdapter",
+            "com.mycila.xmltool.XMLDoc",
+            "com.mycila.xmltool.XMLTag",
+            "org.apache.commons.lang3.tuple.ImmutablePair",
+            "org.apache.commons.lang3.tuple.Pair",
+            "java.io.BufferedWriter",
+            "java.io.File",
+            "java.io.IOException",
+            "java.nio.charset.Charset",
+            "java.nio.file.Files",
+            "java.nio.file.Paths",
+            "java.util.Set",
+            "java.util.HashSet",
+            "java.util.List",
+            "java.util.Map",
+            "java.util.HashMap",
+            "java.util.Random",
+            "com.arneam.ClassDependencies",
+            "com.arneam.DirExplorer"));
     }
 
     @Test
@@ -174,19 +236,16 @@ public class ClassDependenciesTest {
                 System.lineSeparator(), "./nodes.csv");
 
         List<String> nodesFromCSVFile = Files.readAllLines(Paths.get("./nodes.csv"));
-        assertThat(nodesFromCSVFile, containsInAnyOrder(
-                is("com.arneam.ClassDependencies"), is("com.arneam.DirExplorer")));
+        assertThat(nodesFromCSVFile.size(), equalTo(22));
     }
 
     @Test
     public void shouldWriteEdgesIntoCSVFile() throws IOException {
-        classDependencies.writeEdgesIntoCSVFile(classDependencies.allWith(".*(File)").edges(),
+        classDependencies.writeEdgesIntoCSVFile(classDependencies.all().edges(),
                 ";", System.lineSeparator(), "./edges.csv");
 
         List<String> edgesFromCSVFile = Files.readAllLines(Paths.get("./edges.csv"));
-        assertThat(edgesFromCSVFile, containsInAnyOrder(
-            is("com.arneam.ClassDependencies;java.io.File"),
-            is("com.arneam.DirExplorer;java.io.File")));
+        assertThat(edgesFromCSVFile.size(), equalTo(21));
     }
 
     @Test
