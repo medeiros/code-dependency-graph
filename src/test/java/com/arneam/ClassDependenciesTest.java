@@ -19,7 +19,7 @@ import static org.junit.Assert.assertThat;
 
 public class ClassDependenciesTest {
 
-    static final String FILE_PATH = "/Users/dma/code/opensource/code-dependency-graph/src/main/java";
+    static final String FILE_PATH = "/home/daniel/code/opensource/code-dependency-graph/src/main/java";
 
     private static final String NODES_CSV_FILE = "./nodes.csv";
     private static final String EDGES_CSV_FILE = "./edges.csv";
@@ -63,6 +63,7 @@ public class ClassDependenciesTest {
             "com.github.javaparser.ast.visitor.VoidVisitorAdapter",
             "com.mycila.xmltool.XMLDoc",
             "com.mycila.xmltool.XMLTag",
+            "org.apache.commons.lang3.StringUtils",
             "org.apache.commons.lang3.tuple.ImmutablePair",
             "org.apache.commons.lang3.tuple.Pair",
             "java.io.BufferedWriter",
@@ -75,8 +76,7 @@ public class ClassDependenciesTest {
             "java.util.HashSet",
             "java.util.List",
             "java.util.Map",
-            "java.util.HashMap",
-            "java.util.Random")));
+            "java.util.HashMap")));
     }
 
     @Test
@@ -103,6 +103,7 @@ public class ClassDependenciesTest {
             "com.github.javaparser.ast.visitor.VoidVisitorAdapter",
             "com.mycila.xmltool.XMLDoc",
             "com.mycila.xmltool.XMLTag",
+            "org.apache.commons.lang3.StringUtils",
             "org.apache.commons.lang3.tuple.ImmutablePair",
             "org.apache.commons.lang3.tuple.Pair",
             "java.io.BufferedWriter",
@@ -116,7 +117,6 @@ public class ClassDependenciesTest {
             "java.util.List",
             "java.util.Map",
             "java.util.HashMap",
-            "java.util.Random",
             "com.arneam.ClassDependencies",
             "com.arneam.DirExplorer"));
     }
@@ -148,6 +148,8 @@ public class ClassDependenciesTest {
             allOf(hasProperty("key", is("com.arneam.ClassDependencies")),
                     hasProperty("value", is("com.mycila.xmltool.XMLTag"))),
             allOf(hasProperty("key", is("com.arneam.ClassDependencies")),
+                    hasProperty("value", is("org.apache.commons.lang3.StringUtils"))),
+            allOf(hasProperty("key", is("com.arneam.ClassDependencies")),
                     hasProperty("value", is("org.apache.commons.lang3.tuple.ImmutablePair"))),
             allOf(hasProperty("key", is("com.arneam.ClassDependencies")),
                     hasProperty("value", is("org.apache.commons.lang3.tuple.Pair"))),
@@ -171,8 +173,6 @@ public class ClassDependenciesTest {
                     hasProperty("value", is("java.util.HashMap"))),
             allOf(hasProperty("key", is("com.arneam.ClassDependencies")),
                     hasProperty("value", is("java.util.List"))),
-            allOf(hasProperty("key", is("com.arneam.ClassDependencies")),
-                    hasProperty("value", is("java.util.Random"))),
             allOf(hasProperty("key", is("com.arneam.ClassDependencies")),
                 hasProperty("value", is("java.io.File"))),
             allOf(hasProperty("key", is("com.arneam.DirExplorer")),
@@ -202,6 +202,7 @@ public class ClassDependenciesTest {
             "com.github.javaparser.ast.visitor.VoidVisitorAdapter",
             "com.mycila.xmltool.XMLDoc",
             "com.mycila.xmltool.XMLTag",
+            "org.apache.commons.lang3.StringUtils",
             "org.apache.commons.lang3.tuple.ImmutablePair",
             "org.apache.commons.lang3.tuple.Pair",
             "java.io.BufferedWriter",
@@ -215,7 +216,6 @@ public class ClassDependenciesTest {
             "java.util.List",
             "java.util.Map",
             "java.util.HashMap",
-            "java.util.Random",
             "com.arneam.ClassDependencies",
             "com.arneam.DirExplorer"));
     }
