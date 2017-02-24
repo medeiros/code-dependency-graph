@@ -55,9 +55,7 @@ public class ClassDependencies {
 
         dependencies.forEach((k, v) -> {
             nodes.add(k);
-            v.forEach(item -> {
-                nodes.add(item);
-            });
+            v.forEach(item -> nodes.add(item));
         });
 
         return nodes;
@@ -65,11 +63,7 @@ public class ClassDependencies {
 
     public Set<Pair<String, String>> edges() {
         Set<Pair<String, String>> edgeItems = new HashSet<>();
-        dependencies.forEach((k, v) -> {
-            v.forEach(item -> {
-                edgeItems.add(new ImmutablePair(k, item));
-            });
-        });
+        dependencies.forEach((k, v) -> v.forEach(item -> edgeItems.add(new ImmutablePair(k, item))));
         return edgeItems;
     }
 
