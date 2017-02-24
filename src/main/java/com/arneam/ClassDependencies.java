@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.stream.Collectors;
 
 public class ClassDependencies {
 
@@ -51,13 +52,10 @@ public class ClassDependencies {
     }
 
     public Set<String> nodes() {
-        Set<String> nodes = new HashSet<>();
-
-        dependencies.forEach((k, v) -> {
-            nodes.add(k);
-            v.forEach(item -> nodes.add(item));
-        });
-
+        Set<String> nodes = dependencies.entrySet().stream()
+                .flatMap(entry -> entry.getValue().stream())
+                .collect(Collectors.toSet());
+        nodes.addAll(dependencies.keySet());
         return nodes;
     }
 

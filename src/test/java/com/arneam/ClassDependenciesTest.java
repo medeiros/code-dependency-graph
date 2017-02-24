@@ -19,7 +19,8 @@ import static org.junit.Assert.assertThat;
 
 public class ClassDependenciesTest {
 
-    static final String FILE_PATH = "/home/daniel/code/opensource/code-dependency-graph/src/main/java";
+    //static final String FILE_PATH = "/home/daniel/code/opensource/code-dependency-graph/src/main/java";
+    static final String FILE_PATH = "/Users/dma/code/opensource/code-dependency-graph/src/main/java";
 
     private static final String NODES_CSV_FILE = "./nodes.csv";
     private static final String EDGES_CSV_FILE = "./edges.csv";
@@ -76,7 +77,8 @@ public class ClassDependenciesTest {
             "java.util.HashSet",
             "java.util.List",
             "java.util.Map",
-            "java.util.HashMap")));
+            "java.util.HashMap",
+            "java.util.stream.Collectors")));
     }
 
     @Test
@@ -117,6 +119,7 @@ public class ClassDependenciesTest {
             "java.util.List",
             "java.util.Map",
             "java.util.HashMap",
+            "java.util.stream.Collectors",
             "com.arneam.ClassDependencies",
             "com.arneam.DirExplorer"));
     }
@@ -174,6 +177,8 @@ public class ClassDependenciesTest {
             allOf(hasProperty("key", is("com.arneam.ClassDependencies")),
                     hasProperty("value", is("java.util.List"))),
             allOf(hasProperty("key", is("com.arneam.ClassDependencies")),
+                    hasProperty("value", is("java.util.stream.Collectors"))),
+            allOf(hasProperty("key", is("com.arneam.ClassDependencies")),
                 hasProperty("value", is("java.io.File"))),
             allOf(hasProperty("key", is("com.arneam.DirExplorer")),
                     hasProperty("value", is("java.io.File")))
@@ -216,6 +221,7 @@ public class ClassDependenciesTest {
             "java.util.List",
             "java.util.Map",
             "java.util.HashMap",
+            "java.util.stream.Collectors",
             "com.arneam.ClassDependencies",
             "com.arneam.DirExplorer"));
     }
@@ -234,7 +240,7 @@ public class ClassDependenciesTest {
                 System.lineSeparator(), NODES_CSV_FILE);
 
         List<String> nodesFromCSVFile = Files.readAllLines(Paths.get(NODES_CSV_FILE));
-        assertThat(nodesFromCSVFile.size(), equalTo(22));
+        assertThat(nodesFromCSVFile.size(), equalTo(23));
     }
 
     @Test
@@ -243,7 +249,7 @@ public class ClassDependenciesTest {
                 ";", System.lineSeparator(), EDGES_CSV_FILE);
 
         List<String> edgesFromCSVFile = Files.readAllLines(Paths.get(EDGES_CSV_FILE));
-        assertThat(edgesFromCSVFile.size(), equalTo(21));
+        assertThat(edgesFromCSVFile.size(), equalTo(22));
     }
 
     @Test
